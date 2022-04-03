@@ -5,7 +5,8 @@ namespace Red7
     internal partial class Game
     {
         /// <summary>
-        /// Prompts the user to select a number between two numbers, the returns the user input number if valid.
+        /// Prompts the player to select a number between two numbers, the returns the player input number if valid.
+        /// If the player does not enter a valid input, player is reprompted to chose another valid value.
         /// </summary>
         /// <param name="prompt">string to write to the console to notify the user of their choices</param>
         /// <param name="min">int representing the first choice of the user</param>
@@ -24,7 +25,8 @@ namespace Red7
         }
 
         /// <summary>
-        /// 
+        /// Prompts player to pick an number from 1-4 which represents an action and then exicutes the action.
+        /// <para>Where 1: Play to Palette, 2: Play to Canvas, 3: Play to Both, 4: Surrender.</para>
         /// </summary>
         /// <param name="player"></param>
         private void TurnType(Player player)
@@ -35,7 +37,7 @@ namespace Red7
             do
             {
                 turnType = GetNumberInput(
-                    "PLAY TO: PALLET (1), CANVAS (2), BOTH (3) OR SURRENDER (4)",
+                    "\nPLAY TO: PALLET (1), CANVAS (2), BOTH (3) OR SURRENDER (4)",
                     1, 4);
             }
             while (turnType == 3 && player.Hand.GetNumberOfCards() < 2);
@@ -58,6 +60,12 @@ namespace Red7
                     Surrender(player);
                     break;
             }
+
+            if (IsLegalMove(player,turnType))
+                return;
+
+            Console.WriteLine("CANNOT PLAY AS MOVE IS NOT LEGAL");
+            TurnType(player);
         }
 
         /// <summary>
@@ -66,13 +74,8 @@ namespace Red7
         /// <param name="player">Player to prompt and play card</param>
         private static void PlayToPalette(Player player)
         {
-            int cardNumber;
-            do
-            {
-                Console.WriteLine("CHOOSE A CARD TO PLAY TO THE PALETTE");
-                _ = int.TryParse(Console.ReadLine(), out cardNumber);
-            }
-            while (cardNumber < 1 || cardNumber > player.Hand.GetNumberOfCards());
+            int cardNumber = GetNumberInput("CHOOSE A CARD TO PLAY TO THE PALETTE",
+                1, player.Hand.GetNumberOfCards()) - 1;
 
             player.PlayToPalette(cardNumber);
         }
@@ -83,13 +86,8 @@ namespace Red7
         /// <param name="player">Player to prompt and play card</param>
         private void PlayToCanvas(Player player)
         {
-            int cardNumber;
-            do
-            {
-                Console.WriteLine("CHOOSE A CARD TO PLAY TO THE PALETTE");
-                _ = int.TryParse(Console.ReadLine(), out cardNumber);
-            }
-            while (cardNumber < 1 || cardNumber > player.Hand.GetNumberOfCards());
+            int cardNumber = GetNumberInput("CHOOSE A CARD TO PLAY TO THE CANVAS",
+                1, player.Hand.GetNumberOfCards()) - 1;
 
             player.PlayToCanvas(cardNumber, Canvas);
         }
@@ -100,16 +98,25 @@ namespace Red7
         /// <param name="player">Player to prompt and play cards</param>
         private void PlayToBoth(Player player)
         {
-            int cardToCanvas = GetNumberInput("CHOOSE A CARD TO PLAY TO THE PALETTE",
-                1, player.Hand.GetNumberOfCards());
-
+            int cardToCanvas;
             int cardToPalette;
+            bool cardsAreEqual = false;
+
             do
             {
-                cardToPalette = GetNumberInput("CHOOSE A CARD TO PLAY TO THE PALETTE",
-                    1, player.Hand.GetNumberOfCards());
+                if (cardsAreEqual)
+                    Console.WriteLine("CANNOT CHOOSE THE SAME CARD TO PLAY TO THE CANVAS AND PALETTE\n" +
+                        "SELECT 2 UNIQUE CARDS");
+
+                cardToPalette = GetNumberInput("CHOOSE A CARD TO PLAY TO THE PALETTE", 1, player.Hand.GetNumberOfCards()) - 1;
+                cardToCanvas = GetNumberInput("CHOOSE A CARD TO PLAY TO THE CANVAS", 1, player.Hand.GetNumberOfCards()) - 1;
+
+                if(cardToCanvas == cardToPalette)
+                    cardsAreEqual = true;
+                else
+                    cardsAreEqual = false;
             }
-            while (cardToCanvas == cardToPalette);
+            while (cardsAreEqual);
 
             //cards are played by index, thus play the largest index to not change the others index
             if (cardToCanvas > cardToPalette)
@@ -124,6 +131,33 @@ namespace Red7
             }
         }
 
+        public bool IsLegalMove(Player player, int turnType)
+        {
+
+            if (Canvas.GetNumberOfCards() == 0) ;
+            return true;
+
+        }
+
+        public void UndoMove(Player player, int turnType)
+        {
+            switch(turnType)
+            {
+                case 1:
+                    player.ReturnPaletteToHand();
+                    break;
+
+                case 2:
+                    player.ReturnCanvasToHand(Canvas);
+                    break;
+
+                case 3:
+                    player.ReturnPaletteToHand();
+                    player.ReturnCanvasToHand(Canvas);
+                    break;
+            }
+        }
+
         /// <summary>
         /// Changes the players InPlay property to false indicating a surrender
         /// </summary>
@@ -131,6 +165,7 @@ namespace Red7
         private void Surrender(Player player)
         {
             player.InPlay = false;
+            activePlayers--;
         }
     }
 }

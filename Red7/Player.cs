@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Red7
 {
@@ -23,6 +19,9 @@ namespace Red7
 
         public void DrawFromDeck(CardCollection deck)
         {
+            if (deck.GetNumberOfCards() == 0)
+                return;
+
             Hand.AddCard(deck.RemoveCard(0));
         }
 
@@ -38,7 +37,10 @@ namespace Red7
         public void PlayToPalette(int i)
         {
             if (i >= Hand.GetNumberOfCards())
+            {
+                Console.WriteLine("index {0} unreachable", i);
                 return;
+            }
 
             Palette.AddCard(Hand.RemoveCard(i));
         }
@@ -49,6 +51,18 @@ namespace Red7
                 return;
 
             canvas.AddCard(Hand.RemoveCard(i));
+        }
+
+        public void ReturnPaletteToHand()
+        {
+            int lastCardIndex = Palette.GetNumberOfCards() - 1;
+            Hand.AddCard(Palette.RemoveCard(lastCardIndex));
+        }
+
+        public void ReturnCanvasToHand(CardCollection canvas)
+        {
+            int lastCardIndex = canvas.GetNumberOfCards()-1;
+            Hand.AddCard(canvas.RemoveCard(lastCardIndex));
         }
     }
 }

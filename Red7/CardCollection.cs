@@ -6,7 +6,7 @@ namespace Red7
 {
     internal class CardCollection
     {
-        private readonly List<Card> cards;
+        protected readonly List<Card> cards;
 
         public CardCollection()
         {
@@ -28,8 +28,8 @@ namespace Red7
         /// </summary>
         public void PrintCards()
         {
-            for(int i = 0; i < GetNumberOfCards(); i++)
-                Console.Write("(" + i+1 + ")" + " " + cards[i].ToString() + " ");
+            for (int i = 0; i < GetNumberOfCards(); i++)
+                Console.Write("({0}) {1} ", i + 1, cards[i].ToString());
         }
 
         /// <summary>
@@ -52,8 +52,9 @@ namespace Red7
             if(cards.Count <= i)
                 return null;
 
+            Card card = cards[i];
             cards.Remove(cards[i]);
-            return cards[i];
+            return card;
         }
 
         /// <summary>
