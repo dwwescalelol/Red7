@@ -40,6 +40,11 @@ namespace Red7
         {
             foreach (Player player in Players)
             {
+                //Checks if game is over, it if has exits method
+                if (HasFinished())
+                    return;
+
+                //If player has forfitted go onto next player
                 if (!player.InPlay)
                     continue;
 
@@ -61,6 +66,9 @@ namespace Red7
             }
         }
 
+        /// <summary>
+        /// Prints the Pallets of all players to the Console.
+        /// </summary>
         private void ShowPalettes()
         {
             foreach (Player player in Players)
@@ -74,8 +82,8 @@ namespace Red7
         /// <summary>
         /// Returns the player who has won the game, or null if no player has won yet.
         /// </summary>
-        /// <returns>Player who has won</returns>
-        public Player HasWon()
+        /// <returns>Player who has won.</returns>
+        public Player WhoWon()
         {
             if (activePlayers > 1)
                 return null;
@@ -85,6 +93,11 @@ namespace Red7
                     return player;
 
             return null;
+        }
+
+        public bool HasFinished()
+        {
+            return activePlayers == 1;
         }
 
         /// <summary>

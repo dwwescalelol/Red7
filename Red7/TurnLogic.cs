@@ -5,27 +5,7 @@ namespace Red7
     internal partial class Game
     {
         /// <summary>
-        /// Prompts the player to select a number between two numbers, the returns the player input number if valid.
-        /// If the player does not enter a valid input, player is reprompted to chose another valid value.
-        /// </summary>
-        /// <param name="prompt">string to write to the console to notify the user of their choices</param>
-        /// <param name="min">int representing the first choice of the user</param>
-        /// <param name="max">int representing the last choice of the user</param>
-        /// <returns></returns>
-        private static int GetNumberInput(string prompt, int min, int max)
-        {
-            int num;
-            do
-            {
-                Console.WriteLine(prompt);
-                _ = int.TryParse(Console.ReadLine(), out num);
-            }
-            while (num < min || num > max);
-            return num;
-        }
-
-        /// <summary>
-        /// Prompts player to pick an number from 1-4 which represents an action and then exicutes the action.
+        /// Prompts user to pick an number from 1-4 which represents an action and then executes the action.
         /// <para>Where 1: Play to Palette, 2: Play to Canvas, 3: Play to Both, 4: Surrender.</para>
         /// </summary>
         /// <param name="player"></param>
@@ -65,13 +45,16 @@ namespace Red7
                 return;
 
             Console.WriteLine("CANNOT PLAY AS MOVE IS NOT LEGAL");
+            UndoMove(player, turnType);
             TurnType(player);
         }
 
+
+        #region PlayerMoves
         /// <summary>
-        /// Prompts the user to input a int that represents the card they wish to play to the palette from their hand
+        /// Prompts the user to input a int that represents the card they wish to play to the palette from their hand.
         /// </summary>
-        /// <param name="player">Player to prompt and play card</param>
+        /// <param name="player">Player to prompt and play card.</param>
         private static void PlayToPalette(Player player)
         {
             int cardNumber = GetNumberInput("CHOOSE A CARD TO PLAY TO THE PALETTE",
@@ -81,9 +64,9 @@ namespace Red7
         }
 
         /// <summary>
-        /// Prompts the user to input a int that represents the card they wish to play to the canvas from their hand
+        /// Prompts the user to input a int that represents the card they wish to play to the canvas from their hand.
         /// </summary>
-        /// <param name="player">Player to prompt and play card</param>
+        /// <param name="player">Player to prompt and play card.</param>
         private void PlayToCanvas(Player player)
         {
             int cardNumber = GetNumberInput("CHOOSE A CARD TO PLAY TO THE CANVAS",
@@ -93,7 +76,7 @@ namespace Red7
         }
 
         /// <summary>
-        /// Prompts the user to input a int that represents the card they wish to play to the palette and from their hand
+        /// Prompts the user to input a int that represents the <see cref="Card"/> they wish to play to the palette and from their hand.
         /// </summary>
         /// <param name="player">Player to prompt and play cards</param>
         private void PlayToBoth(Player player)
@@ -131,6 +114,25 @@ namespace Red7
             }
         }
 
+        /// <summary>
+        /// Changes the players InPlay property to false indicating a surrender
+        /// </summary>
+        /// <param name="player">Player to surrender</param>
+        private void Surrender(Player player)
+        {
+            player.InPlay = false;
+            activePlayers--;
+        }
+        #endregion
+
+
+        /// <summary>
+        /// Checks if a action taken by a player is legal.
+        /// <para>A legal move is one that makes the player winning by the top card in the canvas <see cref="Colours"/> rule.</para>
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="turnType"></param>
+        /// <returns><see cref="bool"/>: true if the move is legal, false if not.</returns>
         public bool IsLegalMove(Player player, int turnType)
         {
 
@@ -139,6 +141,12 @@ namespace Red7
 
         }
 
+        /// <summary>
+        /// Undoes the actions of a <see cref="Player"/> by taking the most recently played <see cref="Card"/> to the 
+        /// (<see cref="CardCollection"/>) Canvas/Palette, then returning them to the Hand of the <see cref="Player"/>
+        /// </summary>
+        /// <param name="player">Player to undo actions of</param>
+        /// <param name="turnType"></param>
         public void UndoMove(Player player, int turnType)
         {
             switch(turnType)
@@ -159,13 +167,23 @@ namespace Red7
         }
 
         /// <summary>
-        /// Changes the players InPlay property to false indicating a surrender
+        /// Prompts the user to select a number between two numbers, the returns the user input number if valid.
+        /// If the user does not enter a valid input, user is reprompted to chose another valid value.
         /// </summary>
-        /// <param name="player">Player to surrender</param>
-        private void Surrender(Player player)
+        /// <param name="prompt">string to write to the console to notify the user of their choices</param>
+        /// <param name="min">int representing the first choice of the user</param>
+        /// <param name="max">int representing the last choice of the user</param>
+        /// <returns><see cref="int"/> user selected</returns>
+        private static int GetNumberInput(string prompt, int min, int max)
         {
-            player.InPlay = false;
-            activePlayers--;
+            int num;
+            do
+            {
+                Console.WriteLine(prompt);
+                _ = int.TryParse(Console.ReadLine(), out num);
+            }
+            while (num < min || num > max);
+            return num;
         }
     }
 }

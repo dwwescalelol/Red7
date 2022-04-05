@@ -8,9 +8,10 @@ namespace Red7
             {
             Game game = new Game();
             
-            while(true)
+            while(!game.HasFinished())
                game.PlayTurn();
 
+            Console.WriteLine(game.WhoWon().Name + " has won! Congrats!");
 
             Console.ReadLine();
         }
