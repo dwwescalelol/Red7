@@ -26,6 +26,8 @@ namespace Red7
         {
             if (p1.GetNumberOfCards() == p2.GetNumberOfCards())
                 return null;
+
+            return null;
         }
 
         private Player HighestNumber()
