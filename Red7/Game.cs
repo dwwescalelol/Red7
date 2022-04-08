@@ -5,15 +5,16 @@ namespace Red7
     internal partial class Game
     {
         public Player[] Players { get; }
-        public CardCollection Deck { get; }
         public CardCollection Canvas { get; }
         public bool IsActive { get; set; }
+
+        public Deck deck { get; }
         private int activePlayers;
 
         public Game()
         {
-            Deck = new CardCollection();
-            CreateDeck();
+            deck = new Deck();
+            Createdeck();
             activePlayers = GetNumberOfPlayers();
             Players = new Player[activePlayers];
             AddPlayers();
@@ -24,13 +25,13 @@ namespace Red7
         /// <summary>
         /// Creates the deck that the game will use
         /// </summary>
-        private void CreateDeck()
+        private void Createdeck()
         {
             foreach (Colours colour in Enum.GetValues(typeof(Colours)))
                 for (int i = 1; i < 8; i++)
-                    Deck.AddCard(new Card(colour, i));
+                    deck.AddCard(new Card(colour, i));
 
-            Deck.ShuffleCards();
+            deck.ShuffleCards();
         }
 
         /// <summary>
@@ -40,43 +41,62 @@ namespace Red7
         {
             foreach (Player player in Players)
             {
+                Console.Clear();
+
                 //Checks if game is over, it if has exits method
                 if (HasFinished())
                     return;
 
                 //If player has forfitted go onto next player
-                if (!player.InPlay)
-                    continue;
+                if (player.InPlay)
+                {
 
-                Console.WriteLine("\nIT'S " + player.Name + " TURN! PRESS ANY KEY TO ADVANCE\n");
-                
-                Console.ReadKey();
+                    Console.WriteLine("\nIT'S " + player.Name + " TURN! PRESS ANY KEY TO ADVANCE\n");
 
-                ShowPalettes();
+                    Console.ReadKey();
+                    ShowCanvasCard();
+                    ShowPalettes(player);
 
-                Console.Write("\nHAND: ");
-                player.Hand.PrintCards();
-                Console.Write("\nPALETTE: ");
-                player.Palette.PrintCards();
-                Console.Write("\nCANVAS: ");
-                Canvas.PrintCards();
+                    Console.Write("\nYOUR HAND: ");
+                    player.Hand.PrintCards(true);
+                    Console.Write("\nYOUR PALETTE: ");
+                    player.Palette.PrintCards(false);
 
-                TurnType(player);
-                Console.Clear();
+                    TurnType(player);
+                }
+                else
+                {
+                    Console.WriteLine("\nPLAYER " + player.Name + " HAS BEEN ELIMINATED PRESS ENTER TO CONTINUE\n");
+                    Console.ReadKey();
+                }
             }
         }
 
         /// <summary>
         /// Prints the Pallets of all players to the Console.
         /// </summary>
-        private void ShowPalettes()
+        private void ShowPalettes(Player currentPlayer)
         {
             foreach (Player player in Players)
             {
+                if(currentPlayer == player)
+                    continue;
+
                 Console.Write(player.Name + " PALETTE: ");
-                player.Palette.PrintCards();
+                player.Palette.PrintCards(false);
                 Console.WriteLine();
             }
+        }
+
+        /// <summary>
+        /// Print the top card in the canvas to the console, if canvas empty print RED 
+        /// </summary>
+        private void ShowCanvasCard()
+        {
+            if (Canvas.IsEmpty())
+                Console.WriteLine("CANVAS IS EMPTY: " + Colours.RED);
+            else
+                Console.WriteLine("CANVAS: " + Canvas.GetTopCardColour());
         }
 
         /// <summary>
@@ -118,7 +138,7 @@ namespace Red7
         {
             for (int i = 0; i < Players.Length; i++)
             {
-                Console.WriteLine("ENTER PLAYER {0} NAME", i+1);
+                Console.WriteLine("ENTER PLAYER {0} NAME", i + 1);
                 Players[i] = new Player(Console.ReadLine());
                 GivePlayerHand(Players[i]);
             }
@@ -131,7 +151,7 @@ namespace Red7
         private void GivePlayerHand(Player player)
         {
             for (int i = 0; i < 7; i++)
-                player.DrawFromDeck(Deck);
+                player.DrawFromDeck(deck);
         }
     }
 }

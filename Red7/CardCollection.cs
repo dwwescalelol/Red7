@@ -6,30 +6,43 @@ namespace Red7
 {
     internal class CardCollection
     {
-        protected readonly List<Card> cards;
+        public List<Card> Cards { get; }
 
         public CardCollection()
         {
-            cards = new List<Card>();
+            Cards = new List<Card>();
         }
 
         /// <summary>
-        /// Gets the number of cards in the CardCollection
+        /// Gets the number of Cards in the CardCollection
         /// </summary>
-        /// <returns>int number of cards in CardCollection</returns>
+        /// <returns>int number of Cards in CardCollection</returns>
         public int GetNumberOfCards()
         {
-            return cards.Count;
+            return Cards.Count;
         }
 
         /// <summary>
-        /// Prints all the cards and their respective indexes to the Console
+        /// Prints all the Cards and their respective indexes to the Console
         /// Formatted as (index) COLOUR NUMBER
         /// </summary>
-        public void PrintCards()
+        public void PrintCards(bool ordered)
         {
-            for (int i = 0; i < GetNumberOfCards(); i++)
-                Console.Write("({0}) {1} ", i + 1, cards[i].ToString());
+            if (ordered)
+            {
+                for (int i = 0; i < GetNumberOfCards(); i++)
+                    Console.Write("({0}) {1} ", i + 1, Cards[i].ToString());
+            }
+            else
+            {
+                string buffer = "";
+                for (int i = 0; i < GetNumberOfCards(); i++)
+                {
+                    if (i == 1)
+                        buffer = ", ";
+                    Console.Write(buffer + Cards[i].ToString());
+                }
+            }
         }
 
         /// <summary>
@@ -38,7 +51,7 @@ namespace Red7
         /// <param name="card">Card to add</param>
         public void AddCard(Card card)
         {
-            cards.Add(card);
+            Cards.Add(card);
         }
 
         /// <summary>
@@ -49,28 +62,26 @@ namespace Red7
         /// <returns>Card at index i</returns>
         public Card RemoveCard(int i)
         {
-            if(cards.Count <= i)
+            if (Cards.Count <= i)
                 return null;
 
-            Card card = cards[i];
-            cards.Remove(cards[i]);
+            Card card = Cards[i];
+            Cards.Remove(Cards[i]);
             return card;
         }
 
-        /// <summary>
-        /// Shuffels the ordering of the current card collection using a fisher yates shuffle
-        /// </summary>
-        public void ShuffleCards()
+        public Colours GetTopCardColour()
         {
-            Random rnd = new ();
+            return Cards[^1].Colour;
+        }
 
-            for (int i = cards.Count - 1; i > 0; i--)
-            {
-                int r = rnd.Next(i);
-                Card value = cards[r];
-                cards[r] = cards[i];
-                cards[i] = value;
-            }
+        /// <summary>
+        /// Returns a boolean dependant on if the <see cref="CardCollection"/> is empty
+        /// </summary>
+        /// <returns>bool true if empty, false if not</returns>
+        public bool IsEmpty()
+        {
+            return Cards.Count == 0;
         }
     }
 }

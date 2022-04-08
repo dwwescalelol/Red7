@@ -41,7 +41,7 @@ namespace Red7
                     break;
             }
 
-            if (IsLegalMove(player,turnType))
+            if (IsLegalMove(player, turnType))
                 return;
 
             Console.WriteLine("CANNOT PLAY AS MOVE IS NOT LEGAL");
@@ -94,7 +94,7 @@ namespace Red7
                 cardToPalette = GetNumberInput("CHOOSE A CARD TO PLAY TO THE PALETTE", 1, player.Hand.GetNumberOfCards()) - 1;
                 cardToCanvas = GetNumberInput("CHOOSE A CARD TO PLAY TO THE CANVAS", 1, player.Hand.GetNumberOfCards()) - 1;
 
-                if(cardToCanvas == cardToPalette)
+                if (cardToCanvas == cardToPalette)
                     cardsAreEqual = true;
                 else
                     cardsAreEqual = false;
@@ -125,6 +125,12 @@ namespace Red7
         }
         #endregion
 
+        public Player WhoIsWinning()
+        {
+
+
+            return null;
+        }
 
         /// <summary>
         /// Checks if a action taken by a player is legal.
@@ -149,7 +155,7 @@ namespace Red7
         /// <param name="turnType"></param>
         public void UndoMove(Player player, int turnType)
         {
-            switch(turnType)
+            switch (turnType)
             {
                 case 1:
                     player.ReturnPaletteToHand();
