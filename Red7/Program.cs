@@ -6,7 +6,7 @@ namespace Red7
     {
         static void Main(string[] args)
             {
-            TestGame game = new TestGame();
+            Game game = new Game();
             
             while(!game.HasFinished())
                 game.PlayTurn();

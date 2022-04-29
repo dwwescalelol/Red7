@@ -7,7 +7,7 @@ namespace Red7
     {
         public static string Reason { get; set; }
 
-        public static Player WhoIsWinning(TestGame game)
+        public static Player WhoIsWinning(Game game)
         {
             Reason = "";
             return game.Canvas.GetTopCardColour() switch
@@ -29,7 +29,7 @@ namespace Red7
         /// </summary>
         /// <param name="game"></param>
         /// <returns></returns>
-        private static Player Red(TestGame game)
+        private static Player Red(Game game)
         {
             Player winner = null;
 
@@ -88,7 +88,7 @@ namespace Red7
         /// </summary>
         /// <param name="game"></param>
         /// <returns></returns>
-        private static Player Orange(TestGame game)
+        private static Player Orange(Game game)
         {
             //need to keep track of winner and lists of cards to be sent to tie break
             Player winner = null;
@@ -162,7 +162,7 @@ namespace Red7
         #endregion
 
         #region Yellow
-        private static Player Yellow(TestGame game)
+        private static Player Yellow(Game game)
         {
             //need to keep track of winner and lists of cards to be sent to tie break
             Player winner = null;
@@ -239,7 +239,7 @@ namespace Red7
         #endregion
 
         #region Green
-        private static Player Green(TestGame game)
+        private static Player Green(Game game)
         {
             Player winner = null;
 
@@ -280,7 +280,7 @@ namespace Red7
 
         #region Blue
         //Most differenc colours wins
-        private static Player Blue(TestGame game)
+        private static Player Blue(Game game)
         {
             Player winner = null;
 
@@ -332,7 +332,7 @@ namespace Red7
         #endregion
 
         #region Indigo
-        private static Player Indigo(TestGame game)
+        private static Player Indigo(Game game)
         {
             Player winner = null;
 
@@ -410,7 +410,7 @@ namespace Red7
         #endregion
 
         #region Violet
-        private static Player Violet(TestGame game)
+        private static Player Violet(Game game)
         {
             Player winner = null;
 
