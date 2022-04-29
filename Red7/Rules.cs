@@ -106,9 +106,14 @@ namespace Red7
 
                 //find number(s) that player palette has the most of
                 //if hand is {Y4,R4,V1,B6,R6} list will be {4, 6}
-                List<int> mostRecurringNumbers = FindMostOcouringNums(player);
+                int largestMostOccNum = FindLargestMostOccNum(player);
 
-                BestOrangeHand(player, playerCards, mostRecurringNumbers);
+                //adds cards with most occouring cards to list
+                foreach (Card c in player.Palette.Cards)
+                {
+                    if (c.Number == largestMostOccNum)
+                        playerCards.Add(c);
+                }
 
                 if (playerCards.Count > winningCards.Count)
                 {
@@ -128,55 +133,12 @@ namespace Red7
             return winner;
         }
 
-        /// <summary>
-        /// If a player has the same highest value of multiple cards we must
-        /// find the best cards that the player holds
-        /// <para>for example having if hand is {Y4,R4,V1,B6,R6} the player has 2 4's
-        /// and 2 6's. We must find which combination is best to compare against the winning
-        /// hand</para>
-        /// </summary>
-        /// <param name="player">Player we are checking the palette of</param>
-        /// <param name="playerCards">The players cards to be compared to the current strongest cards</param>
-        /// <param name="mostRecurringNumbers">The numbers that the player has the highest frequency(s) of</param>
-        private static void BestOrangeHand(Player player, List<Card> playerCards, List<int> mostRecurringNumbers)
+        private static int FindLargestMostOccNum(Player player)
         {
-            //new list to store temp card sequences to, if playerCards empty or worsae than temp, temp replaces
-            List<Card> playerComparisonCards = new List<Card>();
-            foreach (int num in mostRecurringNumbers)
-            {
-                foreach (Card card in player.Palette.Cards)
-                {
-                    if (card.Number == num)
-                    {
-                        playerComparisonCards.Add(card);
-                    }
-                }
-                if (playerComparisonCards == TieRules.TieBreak(playerComparisonCards, playerCards))
-                {
-                    playerCards = playerComparisonCards.ToList();
-                }
-            }
-        }
-
-        private static List<int> FindMostOcouringNums(Player player)
-        {
+            //dic contains a number as key and the freq of the number in player palette
             Dictionary<int, int> dict = new();
-            int mostOfOneNumber = FindFreqOfMostOccouringNum(player, dict);
 
-            List<int> mostRecurringNumbers = new List<int>();
-            foreach (KeyValuePair<int, int> entry in dict)
-            {
-                if (entry.Value == mostOfOneNumber)
-                {
-                    mostRecurringNumbers.Add(entry.Key);
-                }
-            }
-
-            return mostRecurringNumbers;
-        }
-
-        private static int FindFreqOfMostOccouringNum(Player player, Dictionary<int, int> dict)
-        {
+            //find highest freq palette has
             foreach (Card card in player.Palette.Cards)
             {
                 if (!dict.ContainsKey(card.Number))
@@ -184,8 +146,17 @@ namespace Red7
 
                 dict[card.Number]++;
             }
+
             int mostOfOneNumber = dict.Values.Max();
-            return mostOfOneNumber;
+
+            //find numbers that are of that freq
+            int largestMostOccNum = 0;
+
+            foreach (KeyValuePair<int, int> entry in dict)
+                if (entry.Value == mostOfOneNumber && entry.Key > largestMostOccNum)
+                    largestMostOccNum = entry.Key;
+
+            return largestMostOccNum;
         }
 
         #endregion
@@ -209,9 +180,14 @@ namespace Red7
 
                 //find number(s) that player palette has the most of
                 //if hand is {Y4,R4,V1,B6,R6} list will be {4, 6}
-                List<Colours> mostRecurringNumbers = FindMostOccColours(player);
+                Colours largestMostOccNum = FindLargestMostOccColour(player);
 
-                BestYellowHand(player, playerCards, mostRecurringNumbers);
+                //adds cards with most occouring cards to list
+                foreach (Card c in player.Palette.Cards)
+                {
+                    if (c.Colour == largestMostOccNum)
+                        playerCards.Add(c);
+                }
 
                 if (playerCards.Count > winningCards.Count)
                 {
@@ -231,64 +207,33 @@ namespace Red7
             return winner;
         }
 
-        /// <summary>
-        /// If a player has the same highest value of multiple cards we must
-        /// find the best cards that the player holds
-        /// <para>for example having if hand is {Y4,R4,V1,B6,R6} the player has 2 4's
-        /// and 2 6's. We must find which combination is best to compare against the winning
-        /// hand</para>
-        /// </summary>
-        /// <param name="player">Player we are checking the palette of</param>
-        /// <param name="playerCards">The players cards to be compared to the current strongest cards</param>
-        /// <param name="mostRecurringColours">The numbers that the player has the highest frequency(s) of</param>
-        private static void BestYellowHand(Player player, List<Card> playerCards, List<Colours> mostRecurringColours)
+        private static Colours FindLargestMostOccColour(Player player)
         {
-            //new list to store temp card sequences to, if playerCards empty or worsae than temp, temp replaces
-            List<Card> playerComparisonCards = new List<Card>();
-            foreach (Colours colour in mostRecurringColours)
-            {
-                foreach (Card card in player.Palette.Cards)
-                {
-                    if (card.Colour == colour)
-                    {
-                        playerComparisonCards.Add(card);
-                    }
-                }
-                if (playerComparisonCards == TieRules.TieBreak(playerComparisonCards, playerCards))
-                {
-                    playerCards = playerComparisonCards.ToList();
-                }
-            }
-        }
+            //dic contains a number as key and the freq of the number in player palette
+            Dictionary<Colours, List<Card>> dict = new();
 
-        private static List<Colours> FindMostOccColours(Player player)
-        {
-            Dictionary<Colours, int> dict = new();
-            int mostOfOneNumber = FindFreqMostOccColours(player, dict);
-
-            List<Colours> mostRecurringColours = new List<Colours>();
-            foreach (KeyValuePair<Colours, int> entry in dict)
-            {
-                if (entry.Value == mostOfOneNumber)
-                {
-                    mostRecurringColours.Add(entry.Key);
-                }
-            }
-
-            return mostRecurringColours;
-        }
-
-        private static int FindFreqMostOccColours(Player player, Dictionary<Colours, int> dict)
-        {
+            //find highest freq palette has
             foreach (Card card in player.Palette.Cards)
             {
                 if (!dict.ContainsKey(card.Colour))
-                    dict[card.Colour] = 0;
+                    dict[card.Colour] = new List<Card>();
 
-                dict[card.Colour]++;
+                dict[card.Colour].Add(card);
             }
-            int mostOfOneNumber = dict.Values.Max();
-            return mostOfOneNumber;
+
+            Card bestCard = null;
+            int numCardsOneColour = 0;
+
+            foreach(KeyValuePair<Colours, List<Card>> pair in dict)
+            {
+                if (pair.Value.Count > numCardsOneColour)
+                {
+                    numCardsOneColour = pair.Value.Count;
+                    bestCard = TieRules.BestCard(pair.Value);
+                }
+            }
+
+            return bestCard.Colour;
         }
 
         #endregion
@@ -343,25 +288,44 @@ namespace Red7
             List<Card> playerCards = new List<Card>();
             foreach (Player player in game.Players)
             {
-                //foreach (Card card in player.Palette.Cards)
-                //{
-                //    if (playerCards.Find(i => i.Colour == value))
-                //    {
+                //only players who are in the games pallets are considered
+                if (!player.InPlay)
+                    continue;
 
-                //    }
-                //}
+                playerCards.Clear();
 
-                //int diffColoursPlayer = colours.Count;
+                //find best cards of all unique colorus in palette
+                Dictionary<Colours, Card> dict = new();
 
-                //if (diffColoursPlayer > mostDiffColoursGame)
-                //{
-                //    mostDiffColoursGame = diffColoursPlayer;
-                //    winner = player;
-                //}
-                //else if (mostDiffColoursGame == diffColoursPlayer)
-                //{
+                foreach(Card card in player.Palette.Cards)
+                {
+                    if(!dict.ContainsKey(card.Colour) || dict[card.Colour].CompareTo(card) < 0)
+                    {
+                        dict[card.Colour] = card;
+                    }
+                }
 
-                //}
+                //add all the best cards of each colour in palette to considered cards
+                foreach(KeyValuePair<Colours, Card> pair in dict)
+                {
+                    playerCards.Add(pair.Value);
+                }
+
+                //switch hands if player better or tiebreak
+                if (playerCards.Count > winningCards.Count)
+                {
+                    winningCards = playerCards.ToList();
+                    winner = player;
+                }
+                else if (playerCards.Count == winningCards.Count)
+                {
+                    if (playerCards == TieRules.TieBreak(winningCards, playerCards))
+                    {
+
+                        winningCards = playerCards.ToList();
+                        winner = player;
+                    }
+                }
             }
             return winner;
         }
@@ -370,57 +334,115 @@ namespace Red7
         #region Indigo
         private static Player Indigo(TestGame game)
         {
-            int mostDiffColoursGame = 0;
             Player winner = null;
+
+            List<Card> winningCards = new List<Card>();
+            List<Card> playerCards = new List<Card>();
             foreach (Player player in game.Players)
             {
-                List<Colours> colours = new();
+                //only players who are in the games pallets are considered
+                if (!player.InPlay)
+                    continue;
+                playerCards.Clear();
+                playerCards = FindLargestSequenceOfCards(player);
 
-                foreach (Card card in player.Palette.Cards)
+                //switch hands if player better or tiebreak
+                if (playerCards.Count > winningCards.Count)
                 {
-                    if (!colours.Contains(card.Colour))
-                        colours.Add(card.Colour);
-                }
-
-                int diffColoursPlayer = colours.Count;
-
-                if (diffColoursPlayer > mostDiffColoursGame)
-                {
-                    mostDiffColoursGame = diffColoursPlayer;
+                    winningCards = playerCards.ToList();
                     winner = player;
                 }
-                else if (mostDiffColoursGame == diffColoursPlayer)
+                else if (playerCards.Count == winningCards.Count)
                 {
+                    if (playerCards == TieRules.TieBreak(winningCards, playerCards))
+                    {
 
+                        winningCards = playerCards.ToList();
+                        winner = player;
+                    }
                 }
             }
             return winner;
         }
+
+        private static List<Card> FindLargestSequenceOfCards(Player player)
+        {
+            //dictionary stores best cards for each number
+            Dictionary<int, Card> cards = new Dictionary<int, Card>();
+
+            foreach(Card card in player.Palette.Cards)
+                if (!cards.ContainsKey(card.Number) || cards[card.Number].CompareTo(card) < 0)
+                    cards[card.Number] = card;
+
+            //find longest run of cards, and where run starts
+            int startBest = 0;
+            int currentLength = 1;
+            int maxLength = 1;
+
+            //from 1 -> 7 as the cards are only from 1 - 7
+            for (int i = 1; i < 8; i++)
+            {
+                if (!cards.ContainsKey(i))
+                    continue;
+
+                int startCurrent = cards[i].Number;
+                while (i < 7 && cards.ContainsKey(i + 1))
+                {
+                    currentLength++;
+                    i++;
+                }
+                if (currentLength >= maxLength)
+                {
+                    startBest = startCurrent;
+                    maxLength = currentLength;
+                }
+            }
+
+            //add run of cards to list and return list to be player cards
+            List<Card> playerCards = new List<Card>();
+
+            for(int i = startBest; i < maxLength + startBest; i++)
+                playerCards.Add(cards[i]);
+
+            return playerCards;
+        }
+
         #endregion
 
         #region Violet
         private static Player Violet(TestGame game)
         {
-            int mostCardsBelow4Game = 0;
             Player winner = null;
+
+            List<Card> winningCards = new List<Card>();
+            List<Card> playerCards = new List<Card>();
             foreach (Player player in game.Players)
             {
-                int cardsBelow4Player = 0;
+                //only players who are in the games pallets are considered
+                if (!player.InPlay)
+                    continue;
+
+                playerCards.Clear();
 
                 foreach (Card card in player.Palette.Cards)
                 {
-                    if(card.Number < 4)
-                        cardsBelow4Player++;
+                    if (card.Number < 4)
+                        playerCards.Add(card);
                 }
 
-                if (cardsBelow4Player > mostCardsBelow4Game)
+                if (playerCards.Count > winningCards.Count)
                 {
-                    mostCardsBelow4Game = cardsBelow4Player;
+                    winningCards = playerCards.ToList();
                     winner = player;
                 }
-                else if (mostCardsBelow4Game == cardsBelow4Player)
+                else if (playerCards.Count == winningCards.Count)
                 {
+                    if (playerCards == TieRules.TieBreak(winningCards, playerCards))
+                    {
 
+                        winningCards = playerCards.ToList();
+                        winner = player;
+                    }
                 }
             }
             return winner;

@@ -33,7 +33,7 @@ namespace Red7
                 for (int i = 1; i < 8; i++)
                     Deck.AddCard(new Card(colour, i));
 
-            Deck.ShuffleCards();
+            //Deck.ShuffleCards();
         }
 
         /// <summary>
