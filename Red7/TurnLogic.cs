@@ -5,6 +5,44 @@ namespace Red7
     internal partial class Game
     {
         /// <summary>
+        /// Itterates through players and prompts each player to take their turn.
+        /// </summary>
+        public void PlayTurn()
+        {
+            foreach (Player player in Players)
+            {
+                Console.Clear();
+
+                //Checks if game is over, it if has exits method
+                if (HasFinished())
+                    return;
+
+                //If player has forfitted go onto next player
+                if (player.InPlay)
+                {
+
+                    Console.WriteLine("\nIT'S " + player.Name + " TURN! PRESS ANY KEY TO ADVANCE\n");
+
+                    Console.ReadKey();
+                    ShowCanvasCard();
+                    ShowPalettes(player);
+
+                    Console.Write("\nYOUR HAND: ");
+                    player.Hand.PrintCards(true);
+                    Console.Write("\nYOUR PALETTE: ");
+                    player.Palette.PrintCards(false);
+
+                    TurnType(player);
+                }
+                else
+                {
+                    Console.WriteLine("\nPLAYER " + player.Name + " HAS BEEN ELIMINATED PRESS ENTER TO CONTINUE\n");
+                    Console.ReadKey();
+                }
+            }
+        }
+
+        /// <summary>
         /// Prompts user to pick an number from 1-4 which represents an action and then executes the action.
         /// <para>Where 1: Play to Palette, 2: Play to Canvas, 3: Play to Both, 4: Surrender.</para>
         /// </summary>

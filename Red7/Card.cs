@@ -13,7 +13,7 @@ namespace Red7
         RED
     }
 
-    internal class Card : IComparable
+    internal class Card
     {
         public Colours Colour { get; }
         public int Number { get; }
@@ -31,13 +31,12 @@ namespace Red7
 
         public int CompareTo(object obj)
         {
-            if (obj is not Card card)
-                return 1;
+            Card other = (Card)obj;
+            //goes in order of Tie, check number first then colour
+            if (Number == other.Number)
+                return Colour.CompareTo(other.Colour);
 
-            if (Number == card.Number)
-                return card.Colour.CompareTo(Colour);
-
-            return Number.CompareTo(card.Number);
+            return Number.CompareTo(other.Number);
         }
     }
 }

@@ -6,14 +6,16 @@ namespace Red7
     {
         static void Main(string[] args)
             {
-            Game game = new Game();
+            TestGame game = new TestGame();
             
             while(!game.HasFinished())
-               game.PlayTurn();
+                game.PlayTurn();
 
-            Console.WriteLine(game.WhoWon().Name + " has won! Congrats!");
+            Console.WriteLine(Rules.WhoIsWinning(game).Name);
 
-            Console.ReadLine();
+            //Console.WriteLine(game.WhoWon().Name + " has won! Congrats!");
+
+            //Console.ReadLine();
         }
     }
 }

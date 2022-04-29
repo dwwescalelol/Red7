@@ -8,6 +8,7 @@ namespace Red7
         public CardCollection Hand { get; }
         public CardCollection Palette { get; }
         public bool InPlay { get; set; }
+        public int TurnOrder { get; set; }
 
         public Player(string name)
         {
@@ -15,6 +16,7 @@ namespace Red7
             Hand = new CardCollection();
             Palette = new CardCollection();
             InPlay = true;
+            TurnOrder = 0;
         }
 
         public void DrawFromDeck(CardCollection deck)
@@ -64,5 +66,6 @@ namespace Red7
             int lastCardIndex = canvas.GetNumberOfCards()-1;
             Hand.AddCard(canvas.RemoveCard(lastCardIndex));
         }
+
     }
 }

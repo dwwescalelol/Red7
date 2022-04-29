@@ -70,8 +70,15 @@ namespace Red7
             return card;
         }
 
+        /// <summary>
+        /// Returns the colour of the top card of this card collection
+        /// <para>If empty return <see cref="Colours.RED"/></para>
+        /// </summary>
+        /// <returns><see cref="Colours"/> of the top card of the <see cref="CardCollection"/></returns>
         public Colours GetTopCardColour()
         {
+            if (IsEmpty())
+                return Colours.RED;
             return Cards[^1].Colour;
         }
 

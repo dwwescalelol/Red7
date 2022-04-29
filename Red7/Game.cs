@@ -8,12 +8,12 @@ namespace Red7
         public CardCollection Canvas { get; }
         public bool IsActive { get; set; }
 
-        public Deck deck { get; }
+        public Deck Deck { get; }
         private int activePlayers;
 
         public Game()
         {
-            deck = new Deck();
+            Deck = new Deck();
             Createdeck();
             activePlayers = GetNumberOfPlayers();
             Players = new Player[activePlayers];
@@ -22,6 +22,8 @@ namespace Red7
             IsActive = true;
         }
 
+        #region Game Setup
+
         /// <summary>
         /// Creates the deck that the game will use
         /// </summary>
@@ -29,48 +31,45 @@ namespace Red7
         {
             foreach (Colours colour in Enum.GetValues(typeof(Colours)))
                 for (int i = 1; i < 8; i++)
-                    deck.AddCard(new Card(colour, i));
+                    Deck.AddCard(new Card(colour, i));
 
-            deck.ShuffleCards();
+            Deck.ShuffleCards();
         }
 
         /// <summary>
-        /// Itterates through players and prompts each player to take their turn.
+        /// Gets the number of players in the current game
         /// </summary>
-        public void PlayTurn()
+        /// <returns>int The amount of players in the current game</returns>
+        private static int GetNumberOfPlayers()
         {
-            foreach (Player player in Players)
+            Console.WriteLine("HOW MANY PLAYERS?");
+
+            return GetNumberInput("ENTER 1-4", 1, 4);
+        }
+
+        /// <summary>
+        /// Adds all the players to the Players array and propts each one to enter a name
+        /// </summary>
+        private void AddPlayers()
+        {
+            for (int i = 0; i < Players.Length; i++)
             {
-                Console.Clear();
-
-                //Checks if game is over, it if has exits method
-                if (HasFinished())
-                    return;
-
-                //If player has forfitted go onto next player
-                if (player.InPlay)
-                {
-
-                    Console.WriteLine("\nIT'S " + player.Name + " TURN! PRESS ANY KEY TO ADVANCE\n");
-
-                    Console.ReadKey();
-                    ShowCanvasCard();
-                    ShowPalettes(player);
-
-                    Console.Write("\nYOUR HAND: ");
-                    player.Hand.PrintCards(true);
-                    Console.Write("\nYOUR PALETTE: ");
-                    player.Palette.PrintCards(false);
-
-                    TurnType(player);
-                }
-                else
-                {
-                    Console.WriteLine("\nPLAYER " + player.Name + " HAS BEEN ELIMINATED PRESS ENTER TO CONTINUE\n");
-                    Console.ReadKey();
-                }
+                Console.WriteLine("ENTER PLAYER {0} NAME", i + 1);
+                Players[i] = new Player(Console.ReadLine());
+                GivePlayerHand(Players[i]);
             }
         }
+
+        /// <summary>
+        /// Gives each player 7 cards to put into their hand to start the round
+        /// </summary>
+        /// <param name="player">Player to give cards to</param>
+        private void GivePlayerHand(Player player)
+        {
+            for (int i = 0; i < 7; i++)
+                player.DrawFromDeck(Deck);
+        }
+        #endregion
 
         /// <summary>
         /// Prints the Pallets of all players to the Console.
@@ -120,38 +119,5 @@ namespace Red7
             return activePlayers == 1;
         }
 
-        /// <summary>
-        /// Gets the number of players in the current game
-        /// </summary>
-        /// <returns>int The amount of players in the current game</returns>
-        private static int GetNumberOfPlayers()
-        {
-            Console.WriteLine("HOW MANY PLAYERS?");
-
-            return GetNumberInput("ENTER 1-4", 1, 4);
-        }
-
-        /// <summary>
-        /// Adds all the players to the Players array and propts each one to enter a name
-        /// </summary>
-        private void AddPlayers()
-        {
-            for (int i = 0; i < Players.Length; i++)
-            {
-                Console.WriteLine("ENTER PLAYER {0} NAME", i + 1);
-                Players[i] = new Player(Console.ReadLine());
-                GivePlayerHand(Players[i]);
-            }
-        }
-
-        /// <summary>
-        /// Gives each player 7 cards to put into their hand to start the round
-        /// </summary>
-        /// <param name="player">Player to give cards to</param>
-        private void GivePlayerHand(Player player)
-        {
-            for (int i = 0; i < 7; i++)
-                player.DrawFromDeck(deck);
-        }
     }
 }
