@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3706719391672905861
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3706719391672905863}
+  - component: {fileID: 3706719391672905862}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3706719391672905863
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3706719391672905861}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.7597457, y: -0.34757066, z: 567.26184}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3706719391672905862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3706719391672905861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aea215cc5840ab4189222cc45bef117, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Sounds:
+  - name: Theme
+    group: 0
+    clip: {fileID: 8300000, guid: 104661b022d4b41488afd8fcefd3af23, type: 3}
+    volume: 0.234
+    pitch: 0.99
+    loop: 1
+    source: {fileID: 0}
+  - name: Surrender
+    group: 1
+    clip: {fileID: 8300000, guid: d67b378d114780a498fbfbb09b56401d, type: 3}
+    volume: 0.5
+    pitch: 1.36
+    loop: 0
+    source: {fileID: 0}
+  - name: DrawCard
+    group: 2
+    clip: {fileID: 8300000, guid: 211297401b0ed9743bc0175376e432ca, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: PlaceCard
+    group: 3
+    clip: {fileID: 8300000, guid: bc4ca9abb5587014e828aeae281b9236, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Victory
+    group: 4
+    clip: {fileID: 8300000, guid: 36b2821946ede4648812962479a9f5ea, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
